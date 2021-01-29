@@ -1,0 +1,124 @@
+\section{Methods}
+\subsection{Participants}
+A total of 60 participants ( 39 females, mean age = 23.9 ± 4.6 years) were recruited from the University of Osnabrück and the University of Applied Sciences Osnabr{\"u}ck. Participants had a normal or corrected-to-normal vision and no history of neurological or psychological impairments. They either received a monetary reward of €7.50 or one participation credit per hour. Before each experimental session, subjects gave their informed consent in writing. They also filled out a questionnaire regarding their medical history to ascertain they did not suffer from any disorder/impairments which could affect them in the virtual environment. Once we obtained their informed consent, we briefed them on the experimental setup and task. The Ethics Committee of the University of Osnabr{\"u}ck approved the study. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{source/figures/experiment_setup/task.jpg} \\
+    \caption[]{Experimental Task. In a virtual environment 60 participants sorted 16 different objects based on 2 features color or shape while we measured their eye and body movements. The objects were randomly presented on a 5x5 shelf at the beginning of each trial and were cued to sort objects by shape and/or color. Trials where objects were sorted based on just one object feature (color or shape) were categorized as EASY trials. Conversely, in the trials where sorting was based on both features (color and shape) were categorized as HARD trials. All participants performed 24 trials in total (16 easy trials and 8 hard trials) with no time limit.}
+    \label{figure:task}
+\end{figure}
+
+\subsection{Apparatus \& Procedure}
+For the experiment, we used an HTC Vive Pro Eye head-mounted display (HMD)(110° field of view, 90Hz, resolution 1080 x 1200 px per eye) with a built-in Tobii eye-tracker \footnote{https://www.vive.com/eu/product/vive-pro-eye/overview/}. Participants used an HTC Vive controller to manipulate the objects during the experiment with their right hand. The HTC Vive Lighthouse tracking system provided positional and rotational tracking and was calibrated for 4m x 4m space. For calibration of the gaze parameters, we used 5-point calibration function provided by the SRanipal SDK. To make sure the calibration error was less than $1^\circ$, we performed a 5-point validation after each calibration. Due to the study design, which allowed a lot of natural body movements, the eye tracker was calibrated repeatedly during the experiment after every 3 trials. Furthermore, subjects were fitted with HTC Vive trackers on both ankles, both elbows and, one on the midriff.The body trackers were also calibrated subsequently to give a reliable pose estimation using inverse kinematics of the subject in the virtual environment. We designed the experiment using the Unity3D 2018.x.x (version) and SteamVR game engine and controlled the eye-tracking data recording using SRanipal SDK v0.7.2.1. 
+
+The experimental setup consisted of 16 different objects placed on a shelf of 5x5 grid. The objects were differentiated based on two features: color and shape. We used four high contrast colors (red, blue, green and yellow) and four 3D shapes (cube, sphere, pyramid and cylinder). The objects had an average height of 20cm and width of 20cm. The shelf was designed with a height and width of 2m with 5 rows and columns of equal height, width and, depth. Participants were presented with a display board on the right side of the shelf where the trial instructions were displayed. Subjects were also presented with a red buzzer that they could use to end the trial once they finished the task. 
+
+\subsection{Experimental Task}
+Subjects performed two practice trials where they familiarized themselves with handling the VR controller and the general aspects of the setup. In these practice trials they were free to explore the virtual environment and handle the objects. 
+
+After the practice trials, subjects were asked to sort object based on the one and/or two features of the object. There were two types of trials: EASY and HARD. Subjects were not limited by time to complete the task. Each subject performed 24 trials with each trial type (as listed below) randomly presented twice throughout the experiment. 
+The EASY trials instructions were as follows:
+\begin{enumerate}
+    \item Sort objects so that each row has the same shape or is empty
+    \item Sort objects so that each row has all unique shapes or is empty
+    \item Sort objects so that each row has the same color or is empty
+    \item Sort objects so that each row has all unique colors or is empty
+    \item Sort objects so that each column has the same shape or is empty
+    \item Sort objects so that each column has all unique shapes or is empty
+    \item Sort objects so that each column has the same color or is empty
+    \item Sort objects so that each column has all unique colors or is empty
+\end{enumerate}
+The HARD trials instructions were as follows:
+\begin{enumerate}
+    \item Sort objects so that each row has all the unique colors and all the unique shapes once
+    \item Sort objects so that each column has all the unique colors and all the unique  shapes once
+    \item Sort objects so that each row and column has each of the four colors once. 
+    \item Sort objects so that each row and column has each of the four shapes once. 
+\end{enumerate}
+
+
+
+\subsection{Data pre-processing}
+
+\subsubsection{Gaze Data}
+
+As a first step, using eye-in-head 3d gaze direction vector for the cyclopean eye we calculated the gaze angles for the horizontal $\theta\textsubscript{h}$ and vertical $\theta\textsubscript{v}$ directions. All of the gaze data was sorted by the timestamps of the collected gaze samples. The 3d gaze direction vector of each sample is represented in $(x, y, z)$ coordinates as a unit vector that defines the direction of the gaze in VR world space coordinates. In our setup, the x coordinate corresponds to the left-right direction, y in the up-down direction, z in the forward-backward direction. The formulas used for computing the gaze angles are as follows:
+
+ \begin{equation}\label{eq:h_angle}
+     \theta\textsubscript{h} = \frac{180}{\pi} * \arctan{\frac{x}{z}}
+ \end{equation}   
+  \begin{equation}\label{eq:v_angle}
+     \theta\textsubscript{v} = \frac{180}{\pi} * \arctan{\frac{y}{z}} 
+ \end{equation}   
+ 
+Next, we calculated the angular velocity of the eye in both the horizontal and vertical coordinates by taking a first difference of the angular velocity and dividing by the difference between the timestamp of the samples using the formula below:
+\begin{equation}\label{eq:h_vel_angle}
+    \omega\textsubscript{h} = \Delta\theta\textsubscript{h} / \Delta t
+ \end{equation}  
+ \begin{equation}\label{eq:v_vel_angle}
+     \omega\textsubscript{v} = \Delta\theta\textsubscript{v} / \Delta t
+ \end{equation}  
+
+Finally, we calculated the magnitude of the angular velocity ($\omega$) at every timestamp from the horizontal and vertical components using:
+\begin{equation}\label{eq:vel_angle}
+     \omega = \sqrt{\omega_h^2 + \omega_v^2}
+ \end{equation}  
+
+To filter the samples where gaze was relatively stable, we used an adaptive threshold method for saccade detection described by \citet{Voloh2019-oc}. The schematic of the algorithm used for saccade detection is shown in figure \ref{figure:at_mad}. After this, we calculated the duration of the fixations and removed those fixation samples that had a duration less than 50ms.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{source/figures/experiment_setup/saccade_detection.jpg} \\
+    \caption[]{Saccade detection algorithm. As the participants were completely mobile during the experiment, we used an adaptive method to determine the saccade velocity threshold. We selected an initial saccade velocity $\theta\textsubscript{0}$ of $200^\circ$/sec. All eye movement samples with angular velocity less than $\theta\textsubscript{0}$ were used to compute a new threshold $\theta\textsubscript{1}$  using 3 times the median absolute deviation of the selected samples. If the difference between $\theta\textsubscript{0}$ and $\theta\textsubscript{1}$ was less than or equal to $1^\circ$/sec $\theta\textsubscript{1}$ was selected as the saccade threshold, else algorithm was repeated with $\theta\textsubscript{1}$ as the new filtering threshold. The algorithm was repeated until the difference between the $\theta\textsubscript{0}$ and $\theta\textsubscript{1}$ was less than or equal to $1^\circ$/sec.}
+    \label{figure:at_mad}
+\end{figure}
+
+\subsubsection{Hand controller data}
+
+Subjects used the trigger button of the HTC vive controller to virtually grasp the objects on the shelf and displace them to other locations. In the data, the trigger was recorded as a boolean which was set to TRUE when a grasp was initiated and was reset to FALSE when the grasp ended. Using the position of the controller in the world space, we determined the locations from the shelf where a grasp was initiated and ended. Next, we removed grasping periods where the beginning and final locations of the objects on the shelf were the same. We also removed trials where the controller data was showed implausible locations in the world space. These faulty data can be attributed to loss of tracking during the experiment. 
+
+\subsection{Data Analysis}\label{sec:data_analysis}
+In order to study the function of eye movements for both action planning and execution, we divided each trial into 2 types of epochs. The action execution epoch spanned the time from start of object displacement to the end. The action planning epochs started from end of previous object displacement to start of current object displacement. The schematic of this epoch creation is illustrated in figure \ref{figure:epochs}. This division of time within each trial into separate epochs allows us to parse the role of overt eye movements in planning and execution of object related actions separately.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{source/figures/experiment_setup/epoch_diagram.png} \\
+    \caption[]{Action execution and planning epochs. In order to study the function of eye movements we divided the trials into action execution and action planning epochs. The action execution epochs start from grasp onset till grasp end for each object displacement, whereas the action planning epochs start from grasp end of previous object displacement and grasp onset of current object displacement. }
+    \label{figure:epochs}
+\end{figure}
+
+Given the action planning and execution epochs, we examine the spatial and temporal characteristics of eye movements while performing the sorting tasks. We divided the object and shelf locations into 7 regions-of-interest (ROIs) comprising of previous, current and, next target object and target shelf. More specifically, the previous target object (prev\_TO) refers to the object that was handled in the previous action epoch, and previous target shelf (prev\_TS) as the shelf where the previous target object was placed. Similarly, the current target object (current\_TO) refers to the object that is picked up and placed on the target shelf (current\_TS) in the current epoch and the next target object (next\_TO) and next target shelf (next\_TS) in the immediately following epoch. All other regions which did not conform to the above 6 ROIs are categorized as 'other' and not relevant to the action sequence.  As we need at least 3 object related actions within a trial to form the ROIs for the action planning and action execution epochs, we removed trials where subjects made fewer than three object displacements. In this format, we could parse the sequence of eye movements on the seven ROIs that are relevant for planning and execution of the object related actions. 
+
+To compute the scan paths within the action planning and execution epochs we created transition matrices that show the origin and destination locations of the fixations on the 7 ROIs. We used the steps described by \citet{Hooge2013-bk} to first create the scan paths and then the transition matrices. We computed the transition matrices summarizing gaze transitions from and to the 7 ROIs from the action planning and execution epochs within each trial. Using the transition matrices, we calculated the net and total transitions from and to each ROI. For every transition matrix 'A' per trial, net and total transition are defined as follows:
+\begin{equation}\label{eq:net_transitions}
+     A_{net} = A - A^T
+\end{equation}  
+\begin{equation}\label{eq:total_transitions}
+     A_{total} = A + A^T
+\end{equation}  
+
+As discussed in \citet{Hooge2013-bk}, if subjects make equal number of transitions between all ROIs, we can expect no transitions in the net transition matrix and can surmise that the gaze was allocated more randomly. Conversely, with strong gaze guidance we would expect more net transitions. Hence, using the net and total transitions per trial, we then calculated the relative net transitions denoted as F-value per trial as:
+
+\begin{equation}\label{eq:f_value}
+     F = \frac{\sum A_{net}}{\sum A_{total}}
+\end{equation}  
+
+Further, we also calculated the time required to first fixation on the 7 ROIs using the median time to first fixation on each ROI in a given trial. This method was used by  \citet{Montfoort2007-oa} and further applied by \citet{Hooge2013-bk} to capture the gaze attraction power of ROIs. As defined by \citet{Montfoort2007-oa} and \citet{Hooge2013-bk}, we call this estimator T50 i.e. time to first fixation on the ROIs for 50\% of the actions epochs.
+
+
+\subsubsection{Linear Mixed Effects Model}
+After cleaning the data set, we were left with data from 48 subjects and a total of 813 trials, with 17 trials per subject on average. Using these data, we modelled the linear relationship of the relative net transitions (F-value) dependent on trial type (EASY, HARD), epoch type (planning, execution) and number of object displacements and their interactions. All within-subject effects were modeled using random slopes grouped by subject and a random intercept for the subjects. The categorical variables trial\_type and epoch\_type were effect coded, so that the model coefficients could be interpreted as main effects. The object\_displacement variable which pertained to the number of object displacements in the trial were coded as a continuous numeric variable. The full model is defined using the Wilkinson notation as follows:
+
+\begin{gather}\label{eq:lmm_formula}
+     F-value \sim 1 + trial\_type * epoch\_type * object\_displacements \\
+     + (1 + trial\_type * epoch\_type * object\_displacements | Subject ) 
+\end{gather} 
+
+We fit the model using restricted maximum likelihood (REML) estimation \citep{Corbeil1976-qq} using the lme4 package (v1.1-26) in R 3.6.1. We used the bobyqa optimizer to find the best fit using 20000 interactions. As the maximal model did not converge successfully, we removed the random effects terms one by one and performed model comparison using the Bayesian Information Criterion (BIC). As we have a small number of trials per subject, we chose BIC which selects the model based on both the sample size and number of parameters used by the model. Given the minimum BIC, the following model was selected:
+
+\begin{gather}\label{eq:lmm_formula_used}
+     F-value \sim 1 + trial\_type * epoch\_type * object\_displacements \\
+             + (1 | Subject)
+\end{gather} 
+
