@@ -1,3 +1,63 @@
+
+In this section, we the role of eye movements specific to action planning and execution. The action of picking up an object and dropping it to a shelf location requires precise attention on the object to be grasped and then a shift of gaze to the location of the place where the object will be dropped off. The change of proportion of fixations on the task-relevant objects of interest over time would reveal the average shift of gaze before and during the action execution. To do this, we employ seven regions-of-interest for each action of displacing an object. These regions-of-interest consist of the current target object (current\_TO) that is being displaced, the current target shelf (current\_TS) where the object is displaced finally, the previous target object (prev\_TO) and previous target shelf (prev\_TS) that were relevant in the previous action, the next target object (next\_TO) and next target shelf (next\_TS) that will be interacted with in the next action in the sequence, and finally all the other objects and shelves that were not relevant in the action sequence. We selected the 3s before the virtual hand touches the object (grasp onset) and 3s after and divided it into 0.25 second bins to calculate the proportion of fixations on all of the ROIs within each time bin. Hence, we can assess the dynamic changes in the proportion of fixations on the seven ROIs as the current action is planned and executed.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{source/figures/results/time_course_proportion_7ROI.png}
+    \label{figure:timecourse_fixprop}\\
+    % \subfloat[]{\includegraphics[width=0.7\linewidth]{source/figures/results/time_course_fix_distance.png}
+    % \label{figure:timecourse_manhattan}}
+    \caption[]{ Time course of proportion of fixations centered on the object displacement initiation (grasp onset) at time=0 and 3 seconds before and after on the seven regions of interest and for the two trial types (EASY and HARD). The black dotted horizontal line indicate the chance level (1/16)  of fixating on a target object. The shaded regions show 95\% confidence interval of the mean proportion of gaze at each time-bin across all trials within a trial type. These regions-of-interest consist of the current target object (current\_TO) that is being displaced, the current target shelf (current\_TS) where the object is displaced finally, the previous target object (prev\_TO) and previous target shelf (prev\_TS) that were relevant in the previous action, the next target object (next\_TO) and next target shelf (next\_TS) that will be interacted with in the next action in the sequence, and finally all the other objects and shelves that were not relevant in the action sequence.
+
+  }
+    \label{figure:timecourse}
+\end{figure}
+
+Taken together, the above analysis is evidence of differential gaze guidance during both action planning and execution epochs, where a "search" process is initiated for the current target object and shelf, with the search "ending" on the target object/shelf and immediately following an action of picking up the object or dropping it off respectively. Most importantly, the latency of the fixation on the the current target object shows that object selection for action execution is not necessarily planned. In the action execution epochs, the latency of the T50 for the previous task related object and shelf show that a monitoring of the current action with respect to the previous action might be at play, where fixations made to the prev\_TO and prev\_TS are made to confirm the choice of the current target shelf and might serve as look-back fixations. Further more, the latency of first fixations on the next task object close to the current target shelf indicates that in the 1/10th of the instances, gaze is used to pre-plan the next action before the end of the current action and might function as look-ahead fixations.
+
+% \begin{table}
+% \centering
+% \begin{tabular}{lrrrrrl}
+% \toprule
+%                 model coefficient &    beta &    SE &     95\% CI  &      Z  &  P-value \\
+% \midrule
+%                                     %   (Intercept) &  0.489 & 0.007 &  0.476 &  0.502 & 73.979 &   0.000 \\
+%                     trial type = HARD & -.042 & .011 & [-.063, -.021] & -3.920 &   0.000 \\
+%                 epoch type = PLANNING &  .098 & .012 &  [  .074,   .122] &  8.002 &   0.000 \\
+%                   object displacements & -.003 & .001 & [-.005, -.001] & -2.838 &   0.005 \\
+%     HARD : PLANNING & -.056 & .020 & [-.094, -.017] & -2.802 &   0.005 \\
+%     HARD : object displacements & -.016 & .002 & [-.020, -.012] & -7.130 &   0.000 \\
+%     PLANNING : object displacements &  .000 & .002 & [-.004 , .005] &  0.107 &   0.914 \\
+%  HARD : PLANNING : object displacements & -.019 & .004 & [-.027 , -.010] & -4.203 &   0.000 \\
+% \bottomrule
+% \end{tabular}
+% \caption{\label{tab:lm_res} Model coefficients of the linear fixed effects model.}
+% \end{table}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Fixed effects:
                                              Estimate Std. Error         df     t value     Pr(>|t|)    
 (Intercept)                                 5.356e-01  9.258e-03  9.796e+02      57.846     < 2e-16 ***
